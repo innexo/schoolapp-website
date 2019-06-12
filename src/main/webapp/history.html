@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <!--Background Information -->
+    <title>Tutorial Dashboard</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/main.css">
+    <script src="js/common.js"></script>
+    <script src="js/history.js"></script>
+  </head>
+
+  <body class="light-grey">
+
+    <!--Navigation Bar-->
+    <div class="bar top black large" style="z-index:4">
+      <button class="bar-item button hide-large hover-none hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+      <a href="index.html" class="bar-item left" style="padding-top: 12.5px; text-decoration: none">Attendance Dashboard</a>
+      <span class="bar-item right"><img src="assets/innexo_logo.png"></span>
+    </div>
+
+    <!--Sidebar-->
+    <nav class="sidebar collapse white animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+      <div class="container row">
+        <div class="col s4">
+          <img src="assets/test.gif" class="circle margin-right" style="width:46px">
+        </div>
+        <div class="col s8 bar">
+          <span><strong>Mr. Davis</strong></span><br>
+          <span>English 1A</span><br>
+          <span>Room 100</span><br>
+        </div>
+      </div>
+      <hr>
+      <div class="container">
+        <h5>Dashboard</h5>
+      </div>    
+      <div class="bar-block">
+        <a href="dashboard.html" class="bar-item button padding"><i class="fa fa-bullseye fa-fw"></i>  Overview</a>
+        <a href="history.html" class="bar-item button padding blue"><i class="fa fa-history fa-fw"></i>  History</a>
+        <a href="requests.html" class="bar-item button padding"><i class="fa fa-bookmark fa-fw"></i>  Requests</a>
+        <!--<a href="p4roster.html" class="bar-item button padding"><i class="fa fa-users fa-fw"></i>  4th Period Roster</a> -->
+      </div>
+    </nav>
+
+    <!-- Overlay on small screens -->
+    <div class="overlay hide-large animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="main" style="margin-left:300px;margin-top:43px;">
+
+      <!-- Header -->
+      <header class="container" style="padding-top:22px">
+        <h5><b><i class="fa fa-history"></i> Please use the filters to see your history.</b></h5>
+      </header>
+
+      <div class="row-padding margin-bottom" style="padding-bottom: 10px;">
+        <div class="col" style="background-color: #c1737eff; color: #fff;">
+          <div class="container padding-16" >
+            <form action="" target="_blank">
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-calendar-check-o"></i> Date (From)</label><label class="text-red">*</label></p>
+                <input id="minDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="minDate" style="padding-right: 32px;" required> 
+              </div>
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-calendar-o"></i> Date (To)</label><label class="text-red">*</label></p>
+                <input id="maxDate" class="w3-input w3-border input-box" type="date" placeholder="MM/DD/YYYY" name="maxDate" style="padding-right: 32px;" required>
+              </div>
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-id-card medium"></i> Student ID</label></p>
+                <input id="userId" class="w3-input w3-border input-box" type="text" placeholder="ID" name="userId" maxlength="8" size="8" style="padding-right: 100px;" value=""> 
+              </div>
+              <div class="quarter">
+                <p class="large"><label><i class="fa fa-male"></i> Student Name</label></p>
+                <input id="userName" class="w3-input w3-border input-box" type="text" placeholder="Name" name="userName" style="padding-right: 32px;"> 
+              </div>
+              <button id="submitButton" type="button" class="btn col padding-large margin-top" style="background-color: #daa520ff;" onclick="onQueryClick()">Submit</button>
+            </form>
+          </div>
+        </div>
+
+        <header class="container" >
+          <h5><b><i class="fa fa-history" style="padding-top:20px;"></i> My History</b></h5>
+        </header>
+        <table id="result-table" class="table striped white">
+          <tr class="dark-gray">
+            <td>Name</td>
+            <td>In/Out</td>
+            <td>Left From</td>
+            <td>Destination</td>
+            <td>Time</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>
