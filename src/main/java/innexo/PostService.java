@@ -59,20 +59,18 @@ public class PostService {
       Timestamp maxDateCreation, 
       Timestamp minDateAuthorization, 
       Timestamp maxDateAuthorization, 
-      String titleContains,
       Integer count) {
 		String sql = "SELECT  id, creator_id, authorizer_id, creation_date, authorization_date, title, body, image_link FROM post WHERE 1=1 " + 
-				(postId == null ?          "" : " AND id="+postId) +
-				(authorized == null ?        "" : " AND authorization_date IS " + (authorized ? "NOT" : "") + "NULL") + // if authorized is true, look for not null
-				(creatorId == null ?    "" : " AND creator_id="+creatorId) +
-				(authorizerId == null ?    "" : " AND authorizer_id="+authorizerId) +
-				(minDateCreation == null ?     "" : " AND creation_date >= FROM_UNIXTIME(" + minDateCreation.toInstant().getEpochSecond() + ")") + 
-				(maxDateCreation == null ?     "" : " AND creation_date <= FROM_UNIXTIME(" + maxDateCreation.toInstant().getEpochSecond() + ")") +
-				(minDateAuthorization == null ?     "" : " AND authorization_date >= FROM_UNIXTIME(" + minDateAuthorization.toInstant().getEpochSecond() + ")") + 
-				(maxDateAuthorization == null ?     "" : " AND authorization_date <= FROM_UNIXTIME(" + maxDateAuthorization.toInstant().getEpochSecond() + ")") +
-				(titleContains == null ?    "" : " AND title LIKE \'%"+Utils.valString(titleContains)+"\'%") +
-				(count == null ?       "" : " LIMIT "+count) +
-				                                " ;" ;
+				(postId               == null ? "" : " AND id="+postId) +
+				(authorized           == null ? "" : " AND authorization_date IS " + (authorized ? "NOT" : "") + "NULL") + // if authorized is true, look for not null
+				(creatorId            == null ? "" : " AND creator_id="+creatorId) +
+				(authorizerId         == null ? "" : " AND authorizer_id="+authorizerId) +
+				(minDateCreation      == null ? "" : " AND creation_date >= FROM_UNIXTIME(" + minDateCreation.toInstant().getEpochSecond() + ")") +
+				(maxDateCreation      == null ? "" : " AND creation_date <= FROM_UNIXTIME(" + maxDateCreation.toInstant().getEpochSecond() + ")") +
+				(minDateAuthorization == null ? "" : " AND authorization_date >= FROM_UNIXTIME(" + minDateAuthorization.toInstant().getEpochSecond() + ")") +
+				(maxDateAuthorization == null ? "" : " AND authorization_date <= FROM_UNIXTIME(" + maxDateAuthorization.toInstant().getEpochSecond() + ")") +
+				(count                == null ? "" : " LIMIT "+count) +
+				                                     " ;" ;
 		RowMapper<Post> rowMapper = new PostRowMapper();
 		return this.jdbcTemplate.query(sql, rowMapper);
   }
