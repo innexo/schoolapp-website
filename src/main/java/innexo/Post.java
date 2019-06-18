@@ -2,22 +2,18 @@ package innexo;
 
 import java.sql.Timestamp;
 
-public class Request{
+public class Post {
+
 	public int id;
-	int targetId;
 	int creatorId;
-	int userId;
 	int authorizerId;
-	public boolean reviewed = false;
-	public Boolean authorized;
 	public Timestamp creationDate;
 	public Timestamp authorizationDate;
-	public String reason;
+	public String title;
+	public String body;
+	public String imageLink;
 	
 	//For jackson only
-	public Target target;
 	public User creator;
-	public User user;
-	
-	
+	public User authorizer;
 }

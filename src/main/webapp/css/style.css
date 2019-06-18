@@ -1,0 +1,175 @@
+html, body {
+  overflow-x: hidden;
+}
+
+body {
+  background-color: #eee;
+  font-family: 'Lato';
+  font-size: 16px;
+}
+
+section {
+  padding: 100px 0;
+  position: relative;
+}
+
+a {
+  background: #daa520ff;
+  box-shadow: 0 3px 5px -1px rgba(0, 0, 0, 0.25);
+  color: #FFFFFF;
+  display: inline-block;
+  font-size: 18px;
+  margin-bottom: 15px;
+  margin-top: 15px;
+  padding: 8px 20px;
+  text-transform: uppercase;
+}
+
+center {
+  overflow-y: hidden;
+}
+
+.chrono::before {
+  background: #c1737eff;
+  content: '';
+  height: 90%;
+  left: 50%;
+  position: absolute;
+  transform: translateX(-50%);
+  width: 3px;
+}
+
+.event-card {
+  margin-bottom: 100px;
+  width: 100%;
+}
+
+.event-card:nth-child(even) .event-content {
+  float: right;
+  padding: 40px 30px;
+
+}
+
+.event-card:nth-child(even) .event-content .date {
+  left: 0;
+  right: auto;
+}
+
+.event-card::after {
+  clear: both;
+  content: '';
+  display: block;
+}
+
+.event-content {
+  background: #f5f5f5;
+  border-radius: 4px;
+  box-shadow: 0 15px 20px -10px rgba(0, 0, 0, 0.25);
+  padding: 10px 30px;
+  position: relative;
+  width: 45%;
+}
+
+.event-bloc {
+  background: #daa520ff;
+  height: 30px;
+  left: 50%;
+  margin-top: 25px;
+  margin-left: -15px;
+  position: absolute;
+  width: 30px;
+}
+
+.e-card {
+  padding: 0 !important;
+}
+
+.e-card a {
+  margin-left: 20px;
+}
+
+.e-card p {
+  padding: 0 20px;
+}
+
+.ending {
+  color: #a8a8a8;
+  transform: translateY(-125px);
+  position: relative;
+  font-style: italic;
+}
+
+.event-card:nth-child(2) .event-image {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4)), url("http://travelslovenia.org/wp-content/uploads/2016/02/zgornje-partinje-countryside-slovenia.jpg") center center no-repeat;
+  background-size: cover;
+}
+
+.event-card:nth-child(4) .event-image {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4)), url("http://travelslovenia.org/wp-content/uploads/2016/02/zgornje-partinje-countryside-slovenia.jpg") center center no-repeat;
+  background-size: cover;
+}
+
+.event-card:nth-child(6) .event-image {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4)), url("http://travelslovenia.org/wp-content/uploads/2016/02/zgornje-partinje-countryside-slovenia.jpg") center center no-repeat;
+  background-size: cover;
+}
+
+.event-card:nth-child(8) .event-image {
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.4)), url("http://travelslovenia.org/wp-content/uploads/2016/02/zgornje-partinje-countryside-slovenia.jpg") center center no-repeat;
+  background-size: cover;
+}
+
+.event-image {
+  height: 200px;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.event-image h2 {
+  bottom: 5px;
+  color: #FFFFFF;
+  left: 20px;
+  position: absolute;
+}
+
+.date {
+  background: #c1737eff;
+  color: #FFFFFF;
+  display: inline-block;
+  padding: 10px;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+@media screen and (max-width: 768px) {
+  .chrono::before {
+    left: 50px;
+  }
+
+  .chrono .event-bloc{
+    left: 50px;
+  }
+
+  .chrono .event-content {
+    margin-left: 70px;
+    max-width: 100%;
+    width: auto;
+  }
+
+  .chrono .event-card:nth-child(even) .event-content {
+    float: none;
+  }
+
+  .chrono .event-card:nth-child(odd) .event-content::after {
+    border-color: transparent #f5f5f5 transparent transparent;
+    border-style: solid;
+    border-width: 10px 15px 10px 0;
+    content: '';
+    height: 0;
+    left: -15px;
+    position: absolute;
+    top: 30px;
+    width: 0;
+  }
+}
