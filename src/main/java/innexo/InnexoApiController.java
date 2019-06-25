@@ -29,19 +29,10 @@ public class InnexoApiController{
   UserService userService;
 
   @Autowired
-  EncounterService encounterService;
+  NotificationService notificationService;
 
   @Autowired
-  LocationService locationService;
-
-  @Autowired
-  PermissionService permissionService;
-
-  @Autowired
-  RequestService requestService;
-
-  @Autowired
-  TargetService targetService;
+  PostService postService;
 
   static final ResponseEntity<?> BAD_REQUEST = new ResponseEntity<>(HttpStatus.BAD_REQUEST);
   static final ResponseEntity<?> INTERNAL_SERVER_ERROR = new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -53,8 +44,8 @@ public class InnexoApiController{
   Function<String, Boolean> parseBoolean = (str) -> str == null ? null : Boolean.parseBoolean(str);
   Function<String, Timestamp> parseTimestamp = (str) -> str == null ? null : Timestamp.from(Instant.ofEpochSecond(Long.parseLong(str)));
   
-  Function<Encounter, Encounter> fillEncounter = (e) -> {
-    e.location = locationService.getById(e.locationId);
+  Function<User, User> fillUser = (e) -> {
+    e.post = postService.getById(e.postId);
     e.user = userService.getById(e.userId);
     return e;
   };
@@ -63,25 +54,24 @@ public class InnexoApiController{
     r.creator = userService.getById(r.creatorId);
     r.user = userService.getById(r.userId);
     r.target = targetService.getById(r.targetId);
-    r.target.location = locationService.getById(r.target.locationId);
+    r.target.post = postService.getById(r.target.postId);
     r.target.responsibleUser = userService.getById(r.target.userId);
     return r;
   };
 
-  @RequestMapping(value="encounter/new/")
-  public ResponseEntity<?> newEncounter(
-      @RequestParam("userId")Integer userId, 
-      @RequestParam("locationId")Integer locationId, 
-      @RequestParam("type")String type)
+  @RequestMapping(value="notification/new/")
+  public ResponseEntity<?> newNotification(
+      @RequestParam("userId")Integer senderId, 
+      @RequestParam("text")String type)
   {
-    if(locationId != null && locationId != null && type != null &&
-        locationService.exists(locationId) && userService.exists(userId)) {
-      Encounter encounter = new Encounter();
-      encounter.locationId = locationId;
-      encounter.userId = userId;
-      encounter.time = new Timestamp(System.currentTimeMillis());
-      encounter.type = Utils.valString(type);
-      encounterService.add(encounter);
+    if(postId != null && postId != null && type != null &&
+        postService.exists(postId) && userService.exists(userId)) {
+      User user = new User();
+      user.postId = postId;
+      user.userId = userId;
+      user.time = new Timestamp(System.currentTimeMillis());
+      user.type = Utils.valString(type);
+      userService.add(user);
       return OK;
     } else {
       return BAD_REQUEST ;
@@ -107,87 +97,22 @@ public class InnexoApiController{
     }
   }
 
-  @RequestMapping(value="location/new/")
-  public ResponseEntity<?> newLocation(
+  @RequestMapping(value="post/new/")
+  public ResponseEntity<?> newPost(
       @RequestParam("name")String name, 
       @RequestParam("tags")String tags)
   {
-    Location location = new Location();
-    location.name = Utils.valString(name);
-    location.tags = Utils.valString(tags);
-    locationService.add(location);
+    Post post = new Post();
+    post.name = Utils.valString(name);
+    post.tags = Utils.valString(tags);
+    postService.add(post);
     return OK;
   }
 
-
-  @RequestMapping(value="permission/new/")
-  public ResponseEntity<?> newPermission(
-      @RequestParam("isTrustedUser")Boolean isTrustedUser,
-      @RequestParam("isAdministrator")Boolean isAdministrator)
-  {
-    Permission permission = new Permission();
-    permission.isAdministrator = isAdministrator;
-    permission.isTrustedUser = isTrustedUser;
-    permissionService.add(permission);
-    return OK;
-  }
-
-  @RequestMapping(value="request/new/")
-  public ResponseEntity<?> newRequest(
-      @RequestParam("targetId")Integer targetId,
-      @RequestParam("userId")Integer userId,
-      @RequestParam("creatorId")Integer creatorId,
-      @RequestParam("reason")String reason)
-  {
-    if(userId != null && targetId != null && creatorId != null && reason != null
-        && userService.exists(userId) && userService.exists(creatorId) && targetService.exists(targetId))
-    {
-      Request request = new Request();
-      request.userId = userId;
-      request.targetId = targetId;
-      request.creatorId = creatorId;
-      request.authorizerId = targetService.getById(targetId).userId; //The authorizer must be the responsible user of the target;
-      request.authorized = null;
-      request.reason = reason;
-      request.creationDate = Timestamp.from(Instant.now());
-      requestService.add(request);
-      return OK;
-    } else {
-      return BAD_REQUEST;
-    }
-  }
-
-  @RequestMapping(value="target/new/")
-  public ResponseEntity<?> newTarget(
-      @RequestParam("userId")Integer userId,
-      @RequestParam("locationId")Integer locationId,
-      @RequestParam("name")String name,
-      @RequestParam("minTime")Long minTime,
-      @RequestParam("minTime")Long maxTime)
-  {
-
-    if(userId != null && locationId != null && name != null && minTime != null && maxTime != null
-        && userService.exists(userId) && locationService.exists(locationId))
-    {
-      Target target = new Target();
-      target.userId= userId;
-      target.locationId= locationId;
-      target.name = name;
-      target.minTime = Timestamp.from(Instant.ofEpochSecond(minTime));
-      target.maxTime = Timestamp.from(Instant.ofEpochSecond(maxTime));
-      targetService.add(target);
-      return OK;
-    } else {
-      return BAD_REQUEST;
-    }
-  }
-
-
-
-  @RequestMapping(value="encounter/delete/")
-  public ResponseEntity<?> deleteEncounter(
-      @RequestParam(value="encounterId")Integer encounterId) {
-    encounterService.delete(encounterId);
+  @RequestMapping(value="user/delete/")
+  public ResponseEntity<?> deleteUser(
+      @RequestParam(value="userId")Integer userId) {
+    userService.delete(userId);
     return OK;
   }
 
@@ -198,48 +123,28 @@ public class InnexoApiController{
     return OK;
   }
 
-  @RequestMapping(value="location/delete/")
-  public ResponseEntity<?> deleteLocation(@RequestParam(value="locationId")Integer locationId)
+  @RequestMapping(value="post/delete/")
+  public ResponseEntity<?> deletePost(@RequestParam(value="postId")Integer postId)
   {
-    locationService.delete(locationId);
+    postService.delete(postId);
     return OK;
   }
 
-  @RequestMapping(value="permission/delete/")
-  public ResponseEntity<?> deletePermission(@RequestParam(value="permissionId")Integer permissionId)
-  {
-    permissionService.delete(permissionId);
-    return OK;
-  }
 
-  @RequestMapping(value="target/delete/")
-  public ResponseEntity<?> deleteTarget(@RequestParam(value="targetId")Integer targetId)
+  @RequestMapping(value="user/")
+  public ResponseEntity<?> viewUser(@RequestParam Map<String,String> allRequestParam)
   {
-    targetService.delete(targetId);
-    return OK;
-  }
-
-  @RequestMapping(value="request/delete/")
-  public ResponseEntity<?> deleteRequest(@RequestParam(value="requestId")Integer requestId)
-  {
-    requestService.delete(requestId);
-    return OK;
-  }
-
-  @RequestMapping(value="encounter/")
-  public ResponseEntity<?> viewEncounter(@RequestParam Map<String,String> allRequestParam)
-  {
-    List<Encounter> els = encounterService.query(
+    List<User> els = userService.query(
         parseInteger.apply(allRequestParam.get("count")),
-        parseInteger.apply(allRequestParam.get("encounterId")), 
+        parseInteger.apply(allRequestParam.get("userId")), 
         parseInteger.apply(allRequestParam.get("userId")),
-        parseInteger.apply(allRequestParam.get("locationId")), 
+        parseInteger.apply(allRequestParam.get("postId")), 
         parseTimestamp.apply(allRequestParam.get("minDate")), 
         parseTimestamp.apply(allRequestParam.get("maxDate")),
         Utils.valString(allRequestParam.get("userName")),
         Utils.valString(allRequestParam.get("type")))
         .stream()
-        .map(fillEncounter)
+        .map(fillUser)
         .collect(Collectors.toList());
     return new ResponseEntity<>(els, HttpStatus.OK);
   }
@@ -265,80 +170,20 @@ public class InnexoApiController{
     }
   }
 
-  @RequestMapping(value="location/")
-  public ResponseEntity<?> viewLocation(@RequestParam Map<String,String> allRequestParam)
+  @RequestMapping(value="post/")
+  public ResponseEntity<?> viewPost(@RequestParam Map<String,String> allRequestParam)
   {
-    if(allRequestParam.containsKey("locationId")) {
+    if(allRequestParam.containsKey("postId")) {
       return new ResponseEntity<>(
-          Arrays.asList(locationService.getById(Integer.parseInt(allRequestParam.get("locationId")))),
+          Arrays.asList(postService.getById(Integer.parseInt(allRequestParam.get("postId")))),
           HttpStatus.OK
           );
     } else {
       return new ResponseEntity<>(
-          locationService.getAll(), 
+          postService.getAll(), 
           HttpStatus.OK
           );
     }
   }
 
-  @RequestMapping(value="permission/")
-  public ResponseEntity<?> viewPermission(@RequestParam Map<String,String> allRequestParam)
-  {
-    if(allRequestParam.containsKey("permissionId")) {
-      return new ResponseEntity<>(
-          Arrays.asList(permissionService.getById(Integer.parseInt(allRequestParam.get("permissionId")))),
-          HttpStatus.OK
-          );
-    } else {
-      return new ResponseEntity<>(
-          permissionService.getAll(), 
-          HttpStatus.OK
-          );
-    }
-  }
-
-  @RequestMapping(value="target/")
-  public ResponseEntity<?> viewTarget(@RequestParam Map<String,String> allRequestParam)
-  {
-    if(allRequestParam.containsKey("targetId")) {
-      return new ResponseEntity<>(
-          Arrays.asList(targetService.getById(Integer.parseInt(allRequestParam.get("targetId")))),
-          HttpStatus.OK
-          );
-    } else {
-      return new ResponseEntity<>(
-          targetService.getAll(), 
-          HttpStatus.OK
-          );
-    }
-  }
-
-  @RequestMapping(value="request/")
-  public ResponseEntity<?> viewRequest(@RequestParam Map<String,String> allRequestParam)
-  {
-    return new ResponseEntity<>(
-        requestService.query( 
-            parseInteger.apply(allRequestParam.get("requestId")), 
-            parseInteger.apply(allRequestParam.get("authorizerId")),
-            parseBoolean.apply(allRequestParam.get("reviewed")))
-        .stream()
-        .map(fillRequest)
-        .collect(Collectors.toList()), 
-        HttpStatus.OK);
-  }
-
-  //Special methods
-  @RequestMapping(value="request/authorize/")
-  public ResponseEntity<?> authorizeRequest(@RequestParam(value="requestId")Integer requestId, @RequestParam(value="authorized")Boolean authorized)
-  {
-    if(requestService.exists(requestId)) {
-      Request r = requestService.getById(requestId);
-      r.authorizationDate = Timestamp.from(Instant.now());
-      r.reviewed = true;
-      r.authorized = authorized;
-      requestService.update(r);
-      return OK;
-    }
-    return BAD_REQUEST;
-  }
 }
