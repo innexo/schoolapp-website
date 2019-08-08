@@ -50,4 +50,5 @@ app = Flask(__name__)
 #    text
 
 @app.route('/api/user/new/')
-def newUser(
+def newUser():
+
